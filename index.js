@@ -102,4 +102,9 @@ session.on('change', e => {
 });
 
 window.addEventListener("hashchange", url => {
+    openFile(url.newURL.split('#')[1])
+});
+
+window.addEventListener("resize", () => {
+    updateDisplay()
 });
