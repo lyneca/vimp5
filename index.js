@@ -19,12 +19,22 @@ const HTML_HEAD = `
 
 function saveFile(name) {
     console.log("Saving as", name)
-    sketches.doc(name)
-        .set({
+    sketches.doc(name).get().then(doc => {
+        if (doc.exists) {
+            let c = confirm("The file " + name + " already exists. Are you sure you want to overwrite it?")
+            if (!c) {
+                return true;
+            }
+        }
+        return sketches.doc(name).set({
             code: session.getValue()
-        }).then(() => {
-            window.location.hash = name
-        })
+        });
+    }).then((cancelled) => {
+        if (!cancelled) window.location.hash = name
+    }).catch(e => {
+        console.log("Error saving to Firebase")
+        console.log(e)
+    })
 }
 
 function openFile(name) {
@@ -53,7 +63,6 @@ editor.setOptions({
     mergeUndoDeltas: false | true | "always",
     behavioursEnabled: true,
     wrapBehavioursEnabled: true,
-    enableBasicAutocompletion: true,
     autoScrollEditorIntoView: true,
     copyWithEmptySelection: true,
     useSoftTabs: true,
