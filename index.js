@@ -101,9 +101,9 @@ session.on('change', e => {
     updateDisplay()
 });
 
-window.addEventListener("hashchange", url => {
-    openFile(url.newURL.split('#')[1])
-});
+// window.addEventListener("hashchange", url => {
+//     openFile(url.newURL.split('#')[1])
+// });
 
 window.addEventListener("resize", () => {
     updateDisplay()
