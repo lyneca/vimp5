@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>p5 Stuff</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ace.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyAPhAujM7ztk8SbJXQINvrEVC8dd9KYipw",
+            authDomain: "lyneca-p5-editor.firebaseapp.com",
+            databaseURL: "https://lyneca-p5-editor.firebaseio.com",
+            projectId: "lyneca-p5-editor",
+            storageBucket: "lyneca-p5-editor.appspot.com",
+            messagingSenderId: "1086589793138"
+        };
+        firebase.initializeApp(config);
+    </script>
+</head>
+
+<body>
+
+    <div id="container">
+        <div class="code">
+            <pre id="editor">function setup() {
+    createCanvas(windowWidth, windowHeight);
+}
+
+function draw() {
+    background(0);
+}</pre>
+        </div>
+        <div class="sep"></div>
+        <div class="display">
+            <iframe id="iframe"
+                sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-forms allow-modals"
+                srcdoc="">
+            </iframe>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+    <script id="p5-script"></script>
+
+</body>
+
+</html>
