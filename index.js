@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 ace.require("ace/ext/language_tools");
 
-let firestore = firebase.firestore();
-let sketches = firestore.collection("sketches")
+const firestore = firebase.firestore();
+const sketches = firestore.collection("sketches")
 
 const HTML_HEAD = `
 <head>
@@ -17,40 +18,7 @@ const HTML_HEAD = `
 </head>
 `
 
-function saveFile(name) {
-    console.log("Saving as", name)
-    sketches.doc(name).get().then(doc => {
-        if (doc.exists) {
-            let c = confirm("The file " + name + " already exists. Are you sure you want to overwrite it?")
-            if (!c) {
-                return true;
-            }
-        }
-        return sketches.doc(name).set({
-            code: session.getValue()
-        });
-    }).then((cancelled) => {
-        if (!cancelled) window.location.hash = name
-    }).catch(e => {
-        console.log("Error saving to Firebase")
-        console.log(e)
-    })
-}
-
-function openFile(name) {
-    console.log("Opening", name)
-    sketches.doc(name).get()
-        .then(doc => {
-            if (doc.exists) {
-                session.setValue(doc.data().code)
-            }
-            window.location.hash = name
-        })
-}
-
-
-
-let editor = ace.edit("editor");
+const editor = ace.edit("editor");
 
 editor.setTheme("ace/theme/dawn");
 editor.setKeyboardHandler("ace/keyboard/vim");
@@ -60,7 +28,6 @@ editor.setOptions({
     highlightSelectedWord: true,
     readOnly: false,
     cursorStyle: "smooth",
-    mergeUndoDeltas: false | true | "always",
     behavioursEnabled: true,
     wrapBehavioursEnabled: true,
     autoScrollEditorIntoView: true,
@@ -69,30 +36,13 @@ editor.setOptions({
     navigateWithinSoftTabs: true
 });
 
-window.onload = e => {
-    updateDisplay();
-    if (window.location.hash !== "") {
-        openFile(window.location.hash.split('#')[1])
-    }
-    var VimApi = ace.require("ace/keyboard/vim").CodeMirror.Vim
-    VimApi.defineEx("write", "w", function (cm, input) {
-        if (input.args === undefined && window.location.hash !== "") {
-            saveFile(window.location.hash.split('#')[1])
-        } else {
-            saveFile(input.args[0])
-        }
-    })
-    VimApi.defineEx("open", "o", function (cm, input) {
-        openFile(input.args[0])
-    })
-}
-
 editor.session.setMode("ace/mode/javascript");
 
-let session = editor.getSession();
+const session = editor.getSession();
 
 function updateDisplay() {
-    let iframe = document.getElementById("iframe");
+    const iframe = document.getElementById("iframe");
+
     iframe.srcdoc = `
     <html>
     ${HTML_HEAD}
@@ -110,10 +60,60 @@ session.on('change', e => {
     updateDisplay()
 });
 
-// window.addEventListener("hashchange", url => {
-//     openFile(url.newURL.split('#')[1])
-// });
-
 window.addEventListener("resize", () => {
     updateDisplay()
 });
+
+function saveFile(name) {
+    console.log("Saving as", name)
+    sketches.doc(name).get()
+        .then(doc => {
+            if (doc.exists) {
+                const c = confirm("The file " + name + " already exists. Are you sure you want to overwrite it?")
+
+                if (!c) {
+                    return true;
+                }
+            }
+            return sketches.doc(name).set({
+                code: session.getValue()
+            });
+        })
+        .then((cancelled) => {
+            if (!cancelled) window.location.hash = name
+        })
+        .catch(e => {
+            console.log("Error saving to Firebase")
+            console.log(e)
+        })
+}
+
+function openFile(name) {
+    console.log("Opening", name)
+    sketches.doc(name).get()
+        .then(doc => {
+            if (doc.exists) {
+                session.setValue(doc.data().code)
+            }
+            window.location.hash = name
+        })
+}
+
+window.onload = e => {
+    updateDisplay();
+    if (window.location.hash !== "") {
+        openFile(window.location.hash.split('#')[1])
+    }
+    const VimApi = ace.require("ace/keyboard/vim").CodeMirror.Vim;
+
+    VimApi.defineEx("write", "w", (cm, input) => {
+        if (input.args === undefined && window.location.hash !== "") {
+            saveFile(window.location.hash.split('#')[1])
+        } else {
+            saveFile(input.args[0])
+        }
+    })
+    VimApi.defineEx("open", "o", (cm, input) => {
+        openFile(input.args[0])
+    })
+}
