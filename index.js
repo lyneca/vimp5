@@ -90,7 +90,7 @@ function saveFile(name) {
 
 function openFile(name) {
     console.log("Opening", name)
-    sketches.doc(name).get()
+    return sketches.doc(name).get()
         .then(doc => {
             if (doc.exists) {
                 session.setValue(doc.data().code)
@@ -99,8 +99,28 @@ function openFile(name) {
         })
 }
 
+function loadSketch(span) {
+    openFile(span.dataset.id);
+}
+
+function makeSketchElement(doc) {
+    return `<span class="sketch-name" data-id=${doc.id} onclick="loadSketch(this)">${doc.id}</span>`
+}
+
+function updateSketchList() {
+    sketches.get()
+        .then(snap => {
+            const sketchList = snap.docs
+                .map(makeSketchElement)
+                .join('')
+
+            document.getElementById('sketches').innerHTML = sketchList;
+        });
+}
+
 window.onload = e => {
     updateDisplay();
+    updateSketchList();
     if (window.location.hash !== "") {
         openFile(window.location.hash.split('#')[1])
     }
@@ -112,8 +132,16 @@ window.onload = e => {
         } else {
             saveFile(input.args[0])
         }
-    })
+    });
     VimApi.defineEx("open", "o", (cm, input) => {
         openFile(input.args[0])
-    })
+    });
 }
+
+sketches.onSnapshot(snap => {
+    const sketchList = snap.docs
+        .map(makeSketchElement)
+        .join('')
+
+    document.getElementById('sketches').innerHTML = sketchList;
+});
