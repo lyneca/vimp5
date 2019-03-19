@@ -125,7 +125,11 @@ iframe {
 }
 
 @media screen and (max-width: 1000px) {
-    div.code, div.sep {
+    .code, .hsep, #sketches, .vsep {
         display: none;
+    }
+
+    #container {
+        display: flex;
     }
 }
