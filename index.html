@@ -28,7 +28,7 @@
 <body>
 
     <div id="container">
-        <div class="code">
+        <div class="code area">
             <pre id="editor">function setup() {
     createCanvas(windowWidth, windowHeight);
 }
@@ -38,9 +38,18 @@ function draw() {
 }</pre>
         </div>
         <div class="hsep"></div>
-        <div id="sketches"></div>
+        <div id="sketches" class="area"></div>
         <div class="vsep"></div>
-        <div class="display">
+        <div class="controls area">
+            <button class="control" id="play">play</button>
+            <button class="control" id="autoplay">autoplay</button>
+            <button class="control" id="save">save</button>
+            <button class="control" id="vim">vim mode</button>
+            <input id="title" placeholder="title">
+            <button class="control" id="reload">reload</button>
+        </div>
+        <div class="hsep"></div>
+        <div class="display area">
             <iframe id="iframe"
                 sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-forms allow-modals"
                 srcdoc="">

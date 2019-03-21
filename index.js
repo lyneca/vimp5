@@ -4,6 +4,9 @@ ace.require("ace/ext/language_tools");
 const firestore = firebase.firestore();
 const sketches = firestore.collection("sketches")
 
+let autoplay = false;
+let vimMode = false;
+
 const HTML_HEAD = `
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
@@ -57,11 +60,11 @@ function updateDisplay() {
 }
 
 session.on('change', e => {
-    updateDisplay()
+    if (autoplay) updateDisplay()
 });
 
 window.addEventListener("resize", () => {
-    updateDisplay()
+    if (autoplay) updateDisplay()
 });
 
 function saveFile(name) {
@@ -96,7 +99,7 @@ function openFile(name) {
                 session.setValue(doc.data().code)
             }
             window.location.hash = name
-        })
+        }) || false
 }
 
 function loadSketch(span) {
@@ -118,6 +121,27 @@ function updateSketchList() {
         });
 }
 
+function toggleAutoplay() {
+    autoplay = !autoplay;
+    localStorage.setItem('autoplay', autoplay);
+    if (autoplay) {
+        document.getElementById('autoplay').classList.add('active');
+        updateDisplay();
+    } else document.getElementById('autoplay').classList.remove('active');
+}
+
+function toggleVim() {
+    vimMode = !vimMode;
+    localStorage.setItem('vim', vimMode);
+    if (vimMode) {
+        document.getElementById('vim').classList.add('active');
+        editor.setKeyboardHandler('ace/keyboard/vim');
+    } else {
+        document.getElementById('vim').classList.remove('active');
+        editor.setKeyboardHandler('');
+    }
+}
+
 window.onload = e => {
     updateDisplay();
     updateSketchList();
@@ -136,6 +160,26 @@ window.onload = e => {
     VimApi.defineEx("open", "o", (cm, input) => {
         openFile(input.args[0])
     });
+
+    vimMode = JSON.parse(localStorage.getItem('vim'));
+    autoplay = JSON.parse(localStorage.getItem('autoplay'));
+
+    if (vimMode) {
+        document.getElementById('vim').classList.add('active');
+        editor.setKeyboardHandler('ace/keyboard/vim');
+    } else {
+        document.getElementById('vim').classList.remove('active');
+        editor.setKeyboardHandler('');
+    }
+
+    if (autoplay) document.getElementById('autoplay').classList.add('active');
+    else document.getElementById('autoplay').classList.remove('active');
+
+    document.getElementById('play').onclick = updateDisplay;
+    document.getElementById('autoplay').onclick = toggleAutoplay;
+    document.getElementById('save').onclick = () => saveFile(document.getElementById("title").value);
+    document.getElementById('vim').onclick = toggleVim;
+    document.getElementById('reload').onclick = () => openFile(window.location.hash.split('#')[1]);
 }
 
 sketches.onSnapshot(snap => {
