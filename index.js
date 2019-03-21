@@ -67,8 +67,14 @@ window.addEventListener("resize", () => {
     if (autoplay) updateDisplay()
 });
 
+function status(text) {
+    if (text === '') document.getElementById().classList.add('hidden')
+    else document.getElementById('status').classList.remove('hidden');
+    document.getElementById('status').innerText = text;
+}
+
 function saveFile(name) {
-    console.log("Saving as", name)
+    status('saving...');
     sketches.doc(name).get()
         .then(doc => {
             if (doc.exists) {
@@ -83,22 +89,32 @@ function saveFile(name) {
             });
         })
         .then((cancelled) => {
-            if (!cancelled) window.location.hash = name
+            if (cancelled) {
+                status('');
+            } else {
+                window.location.hash = name;
+                status('saved.');
+            }
         })
         .catch(e => {
+            status('couldn\'t save.');
             console.log("Error saving to Firebase")
             console.log(e)
         })
 }
 
 function openFile(name) {
-    console.log("Opening", name)
+    status('loading...')
     return sketches.doc(name).get()
         .then(doc => {
             if (doc.exists) {
                 session.setValue(doc.data().code)
+                status('loaded.')
+            } else {
+                status('not found.')
             }
             window.location.hash = name
+            document.getElementById('title').value = name;
         }) || false
 }
 

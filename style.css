@@ -36,6 +36,18 @@ body {
     box-shadow: 0 5px 10px 5px rgba(0, 0, 0, 0.05);
 }
 
+#status {
+    /* border-left: 1px solid #dddddd; */
+    /* padding-left: 10px; */
+    /* margin-left: 5px; */
+    color: #cccccc;
+    font-size: 13.3px;
+}
+
+#status.hidden {
+    display: none;
+}
+
 .control {
     background-color: white;
     border: 1px solid #dddddd;
@@ -66,6 +78,11 @@ body {
     padding: 10px;
     outline: none !important;
     font-family: 'Inconsolata', monospace;
+    transition: border-color 0.2s ease-in-out;
+}
+
+#title:focus {
+    border-color: #4d94ff;
 }
 
 .code {
@@ -74,6 +91,7 @@ body {
 }
 
 .display {
+    touch-action: none;
     grid-row: span 3;
 }
 
