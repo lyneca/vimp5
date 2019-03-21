@@ -5,6 +5,7 @@
 
 body {
     font-family: 'Inconsolata';
+    overscroll-behavior: none !important;
 }
 
 #container {
