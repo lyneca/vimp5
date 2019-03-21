@@ -184,7 +184,7 @@ iframe {
 }
 
 @media screen and (max-width: 1000px) {
-    .code, .hsep, #sketches, .vsep {
+    .code, .hsep, #sketches, .vsep, .controls {
         display: none;
     }
 

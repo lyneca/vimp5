@@ -115,6 +115,7 @@ function openFile(name) {
             }
             window.location.hash = name
             document.getElementById('title').value = name;
+            updateDisplay();
         }) || false
 }
 
