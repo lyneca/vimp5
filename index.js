@@ -197,6 +197,7 @@ window.onload = e => {
     document.getElementById('save').onclick = () => saveFile(document.getElementById("title").value);
     document.getElementById('vim').onclick = toggleVim;
     document.getElementById('reload').onclick = () => openFile(window.location.hash.split('#')[1]);
+    document.getElementById('fullscreen').onclick = () => document.getElementById('iframe').contentWindow.document.getElementById('defaultCanvas0').requestFullscreen();
 }
 
 sketches.onSnapshot(snap => {
