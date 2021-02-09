@@ -60,6 +60,7 @@ function updateDisplay() {
     </html>
     `
     iframe.contentWindow.location.reload()
+    iframe.src = iframe.src;  // 'reload' iframe lol
 }
 
 session.on('change', e => {
