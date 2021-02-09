@@ -48,8 +48,8 @@ const session = editor.getSession();
 
 function updateDisplay() {
     const iframe = document.getElementById("iframe");
-
-    iframe.srcdoc = `
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(`
     <html>
     ${HTML_HEAD}
     <body>
@@ -58,9 +58,10 @@ function updateDisplay() {
     </script>
     </body>
     </html>
-    `
-    iframe.contentWindow.location.reload()
-    iframe.src = iframe.src;  // 'reload' iframe lol
+    `);
+    iframe.contentWindow.document.close();
+    //iframe.contentWindow.location.reload()
+    //iframe.src = iframe.src;  // 'reload' iframe lol
 }
 
 session.on('change', e => {
